@@ -1,0 +1,39 @@
+celery (sending message)
+
+1.make celery.py in main project direftory
+2.add folllowing configuration in settings.py
+
+# Celery settings
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Redis as the message broker
+CELERY_ACCEPT_CONTENT = ['json']  # Celery will accept only JSON messages
+CELERY_TASK_SERIALIZER = 'json'   # Serialize task messages as JSON
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # Redis as the result backend
+
+
+#add in shared_app
+    'django_celery_results'
+
+#install library
+redis==5.2.1
+django-celery-results==2.5.1
+celery==5.4.0
+
+
+
+3.add task.py for sending mail 
+
+
+from Merchant.models import Client, Domain
+
+tenant = Client(schema_name='tenant3',
+                name='Fonzy Tenant',
+                paid_until='2014-12-05',
+                on_trial=True)
+tenant.save() # migrate_schemas automatically called, your tenant is ready to be used!
+
+# Add one or more domains for the tenant
+domain = Domain()
+domain.domain = 'localhost' # don't add your port or www here!
+domain.tenant = tenant
+domain.is_primary = True
+domain.save()
